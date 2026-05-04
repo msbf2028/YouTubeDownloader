@@ -3,8 +3,8 @@ name: Extract YouTube Playlist
 on:
   workflow_dispatch:
     inputs:
-      playlist_url:
-        description: "YouTube Playlist URL"
+      playlist:
+        description: "Playlist URL"
         required: true
 
 jobs:
@@ -14,32 +14,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install yt-dlp + jq
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y jq
-          pip install yt-dlp
+      - name: Install yt-dlp
+        run: pip install yt-dlp
 
-      - name: Extract playlist metadata
+      - name: Extract playlist
         run: |
           yt-dlp \
             --flat-playlist \
             --dump-single-json \
-            "${{ github.event.inputs.playlist_url }}" \
-            > playlist.json
+            "${{ github.event.inputs.playlist }}" > playlist.json
 
-      - name: Convert to Markdown
+      - name: Generate markdown
         run: |
-          echo "| # | Title | Link |" > playlist.md
-          echo "|---|---|---|" >> playlist.md
+          python <<EOF
+          import json
 
-          jq -r '.entries[] | [.playlist_index, .title, "https://youtube.com/watch?v=" + .id] | @tsv' playlist.json \
-          | while IFS=$'\t' read -r idx title link; do
-              echo "| $idx | $title | $link |" >> playlist.md
-            done
+          with open("playlist.json") as f:
+              data = json.load(f)
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+          with open("playlist.md", "w", encoding="utf-8") as md:
+              md.write("| Title | Link |\n")
+              md.write("|---|---|\n")
+
+              for e in data["entries"]:
+                  title = e["title"].replace("|", "\\|")
+                  url = f"https://youtube.com/watch?v={e['id']}"
+                  md.write(f"| {title} | {url} |\n")
+          EOF
+
+      - uses: actions/upload-artifact@v4
         with:
-          name: playlist-markdown
+          name: playlist-md
           path: playlist.md
