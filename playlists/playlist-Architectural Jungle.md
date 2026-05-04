@@ -1,0 +1,34 @@
+| # | Title | Link |
+|---|---|---|
+| [Persian] Welcome to the Architectural Jungle - Part 1 | https://youtube.com/watch?v=mexiRfX37fU |  |
+| [Persian] What is the architectural styles - Part 2 | https://youtube.com/watch?v=9a81hBEZ1N8 |  |
+| [Persian] Architectural Style vs Architectural Pattern - Part 3 | https://youtube.com/watch?v=C2eICwZk1y4 |  |
+| [Persian] Architecture Characteristics and Design Principles - Part 4 | https://youtube.com/watch?v=Jx3ncYuoB_U |  |
+| [Persian] Layered, Hexagonal, Onion Architecture - Part 5 | https://youtube.com/watch?v=mwGDlI5X2AY |  |
+| [Persian] Clean Architecture - Part 6 | https://youtube.com/watch?v=CLQzLZUTMqU |  |
+| [Persian] Clean Architecture + CQRS in Code - Part 7 | https://youtube.com/watch?v=npTJDNsEK4Q |  |
+| [Persian] Clean Architecture + CQRS and MediatR - Part 8 | https://youtube.com/watch?v=ePocOdXTi0U |  |
+| [Persian] Microservices Architectural Style and DDD - Part 9 | https://youtube.com/watch?v=m6btTA1wrhs |  |
+| [Persian] Microservices And Orchestration, Choreography - Part 10 | https://youtube.com/watch?v=UWANIYnAtdg |  |
+| [Persian] Circuit Breaker and Retry pattern with Polly in .Net - Part 11 | https://youtube.com/watch?v=XWqQb8KfYKE |  |
+| [Persian] Fallacy #2 - Latency is Zero ! - Part 12 | https://youtube.com/watch?v=oyxD6boC_q8 |  |
+| [Persian] What is Service Discovery? - Part 13 | https://youtube.com/watch?v=k7kPf3x0-C8 |  |
+| [Persian] Stamp Coupling and Bandwidth Concern in Microservices - Part 14 | https://youtube.com/watch?v=hWfxxMlSW1g |  |
+| [Persian] Asp.net Core Api Gateway with Ocelot in Microservices - Part 15 | https://youtube.com/watch?v=F7L2XjD4jsQ |  |
+| [Persian] API Gateway with Ocelot in Microservice - Part 16 | https://youtube.com/watch?v=zUJiyQK-6lo |  |
+| [Persian] ServiceDiscovery with Consul and Ocelot - Part 17 | https://youtube.com/watch?v=TGv8Rl065xY |  |
+| [Persian] Network is not reliable - Microservices #1 | https://youtube.com/watch?v=UelkhEqZHv0 |  |
+| [Persian] Latency is not zero - Microservices #2 | https://youtube.com/watch?v=kcRmnUqIadc |  |
+| [Persian] Bandwidth is not infinite - Microservices #3 | https://youtube.com/watch?v=HK8EXZFHaoo |  |
+| [Persian] Network is not secure - Microservices #4,5,6 | https://youtube.com/watch?v=GqsAYL91ufo |  |
+| [Persian] Remote access cost and Distributed Logging - Microservices | https://youtube.com/watch?v=qwFD0m-gEzM |  |
+| [Persian] Monitor Your Services - Part 1 | https://youtube.com/watch?v=_Exs9RW_6LA |  |
+| [Persian] Monitor Your Services! - Part 2 | https://youtube.com/watch?v=JD7wc2N5Mso |  |
+| [Persian] Monitor Your Services! - Part 3 | https://youtube.com/watch?v=eOo_NYsTLvs |  |
+| [Persian] Monitor Your Service - Alert Manager - Part 4 | https://youtube.com/watch?v=oEx3e9R0zlk |  |
+| [Persian] System Design, CAP Theory - Part 6 | https://youtube.com/watch?v=nrSQlJ6xlPk |  |
+| [Persian] Patterns of Event Driven Architecture - Part 1 | https://youtube.com/watch?v=a2ehsKZ5Qw4 |  |
+| [Persian] Patterns of Event Driven Architecture - Part 2 | https://youtube.com/watch?v=Nfu0UUTlu4o |  |
+| [Persian] Patterns of Event Driven Architecture - Part 3 | https://youtube.com/watch?v=MHxGy-Im_s0 |  |
+| [Persian] Patterns Of Event Driven Architecture - Part 4 | https://youtube.com/watch?v=wkebxoMSpbA |  |
+| [Persian] Patterns of Event Driven Architecture - Part 5 | https://youtube.com/watch?v=lahRwdn5k4E |  |
