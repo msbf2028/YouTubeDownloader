@@ -1,4 +1,4 @@
-name: Extract YouTube Playlist
+name: Extract YouTube Playlist → Commit
 
 on:
   workflow_dispatch:
@@ -7,42 +7,53 @@ on:
         description: "Playlist URL"
         required: true
 
+permissions:
+  contents: write   # REQUIRED for pushing
+
 jobs:
   extract:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - name: Install yt-dlp
-        run: pip install yt-dlp
+      - name: Setup yt-dlp
+        uses: AnimMouse/setup-yt-dlp@v3   # cleaner than pip install :contentReference[oaicite:0]{index=0}
 
-      - name: Extract playlist
+      - name: Extract playlist JSON
         run: |
           yt-dlp \
             --flat-playlist \
             --dump-single-json \
             "${{ github.event.inputs.playlist }}" > playlist.json
 
-      - name: Generate markdown
+      - name: Generate Markdown
         run: |
           python <<EOF
           import json
 
-          with open("playlist.json") as f:
+          with open("playlist.json", encoding="utf-8") as f:
               data = json.load(f)
 
           with open("playlist.md", "w", encoding="utf-8") as md:
-              md.write("| Title | Link |\n")
-              md.write("|---|---|\n")
+              md.write("| # | Title | Link |\n")
+              md.write("|---|------|------|\n")
 
-              for e in data["entries"]:
+              for i, e in enumerate(data["entries"], start=1):
                   title = e["title"].replace("|", "\\|")
                   url = f"https://youtube.com/watch?v={e['id']}"
-                  md.write(f"| {title} | {url} |\n")
+                  md.write(f"| {i} | {title} | {url} |\n")
           EOF
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: playlist-md
-          path: playlist.md
+      - name: Commit & Push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add playlist.md
+
+          # Avoid failing if no changes
+          git diff --cached --quiet || git commit -m "Update playlist.md"
+
+          git push
