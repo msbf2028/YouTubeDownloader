@@ -1,0 +1,45 @@
+name: Extract YouTube Playlist
+
+on:
+  workflow_dispatch:
+    inputs:
+      playlist_url:
+        description: "YouTube Playlist URL"
+        required: true
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install yt-dlp + jq
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+          pip install yt-dlp
+
+      - name: Extract playlist metadata
+        run: |
+          yt-dlp \
+            --flat-playlist \
+            --dump-single-json \
+            "${{ github.event.inputs.playlist_url }}" \
+            > playlist.json
+
+      - name: Convert to Markdown
+        run: |
+          echo "| # | Title | Link |" > playlist.md
+          echo "|---|---|---|" >> playlist.md
+
+          jq -r '.entries[] | [.playlist_index, .title, "https://youtube.com/watch?v=" + .id] | @tsv' playlist.json \
+          | while IFS=$'\t' read -r idx title link; do
+              echo "| $idx | $title | $link |" >> playlist.md
+            done
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: playlist-markdown
+          path: playlist.md
