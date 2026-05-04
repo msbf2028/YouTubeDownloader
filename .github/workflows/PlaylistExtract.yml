@@ -1,59 +1,63 @@
-name: Extract YouTube Playlist → Commit
+name: Extract YouTube Playlist
 
 on:
   workflow_dispatch:
     inputs:
-      playlist:
-        description: "Playlist URL"
+      playlist_url:
+        description: "YouTube Playlist URL"
         required: true
-
-permissions:
-  contents: write   # REQUIRED for pushing
 
 jobs:
   extract:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup yt-dlp
-        uses: AnimMouse/setup-yt-dlp@v3   # cleaner than pip install :contentReference[oaicite:0]{index=0}
+        uses: AnimMouse/setup-yt-dlp@v3   # cleaner than pip install :contentReference[oaicite:1]{index=1}
+
+      - name: Install jq
+        run: sudo apt-get install -y jq
 
       - name: Extract playlist JSON
         run: |
           yt-dlp \
             --flat-playlist \
             --dump-single-json \
-            "${{ github.event.inputs.playlist }}" > playlist.json
+            "${{ github.event.inputs.playlist_url }}" \
+            > playlist.json
 
-      - name: Generate Markdown
+      - name: Generate Markdown with playlist name
         run: |
-          python <<EOF
-          import json
+          # extract playlist title safely
+          PLAYLIST_NAME=$(jq -r '.title' playlist.json | sed 's#[^a-zA-Z0-9 _-]##g')
 
-          with open("playlist.json", encoding="utf-8") as f:
-              data = json.load(f)
+          # fallback if empty
+          if [ -z "$PLAYLIST_NAME" ] || [ "$PLAYLIST_NAME" = "null" ]; then
+            PLAYLIST_NAME="unknown-playlist"
+          fi
 
-          with open("playlist.md", "w", encoding="utf-8") as md:
-              md.write("| # | Title | Link |\n")
-              md.write("|---|------|------|\n")
+          FOLDER="playlists"
+          mkdir -p "$FOLDER"
 
-              for i, e in enumerate(data["entries"], start=1):
-                  title = e["title"].replace("|", "\\|")
-                  url = f"https://youtube.com/watch?v={e['id']}"
-                  md.write(f"| {i} | {title} | {url} |\n")
-          EOF
+          FILE="$FOLDER/playlist-${PLAYLIST_NAME}.md"
 
-      - name: Commit & Push
+          echo "| # | Title | Link |" > "$FILE"
+          echo "|---|---|---|" >> "$FILE"
+
+          jq -r '.entries[] | [.playlist_index, .title, "https://youtube.com/watch?v=" + .id] | @tsv' playlist.json \
+          | while IFS=$'\t' read -r idx title link; do
+              echo "| $idx | $title | $link |" >> "$FILE"
+            done
+
+          echo "Generated: $FILE"
+
+      - name: Commit result (optional)
         run: |
           git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+          git config user.email "actions@github.com"
 
-          git add playlist.md
-
-          # Avoid failing if no changes
-          git diff --cached --quiet || git commit -m "Update playlist.md"
-
+          git add playlists/
+          git commit -m "Add playlist markdown"
           git push
